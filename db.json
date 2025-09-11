@@ -2,30 +2,111 @@
   "posts": [
     {
       "id": "1",
-      "title": "hhi",
-      "views": "123"
+      "title": "a title",
+      "views": 100,
+      "isDeleted": true
     },
     {
-      "id": "123",
-      "title": "123",
-      "views": "123"
+      "id": "2",
+      "title": "another title",
+      "views": 200,
+      "isDeleted": true
     },
     {
-      "id": "312",
+      "title": "heheeh",
+      "views": "20000",
+      "id": "3",
+      "isDeleted": true
+    },
+    {
+      "id": "4",
       "title": "123",
-      "views": "132"
+      "views": "321",
+      "isDeleted": true
+    },
+    {
+      "id": "5",
+      "title": "231",
+      "views": "123",
+      "isDeleted": true
+    },
+    {
+      "id": "6",
+      "title": "123",
+      "views": "321",
+      "isDeleted": true
+    },
+    {
+      "id": "7",
+      "title": "132",
+      "views": "213",
+      "isDeleted": true
+    },
+    {
+      "id": "8",
+      "title": "123",
+      "views": "132",
+      "isDeleted": true
+    },
+    {
+      "id": "9",
+      "title": "312",
+      "views": "312",
+      "isDeleted": true
+    },
+    {
+      "id": "10",
+      "title": "213",
+      "views": "312",
+      "isDeleted": true
+    },
+    {
+      "id": "11",
+      "title": "231",
+      "views": "123",
+      "isDeleted": true
+    },
+    {
+      "id": "12",
+      "title": "231",
+      "views": "321",
+      "isDeleted": true
+    },
+    {
+      "id": "13",
+      "title": "qwe",
+      "views": "ewq",
+      "isDeleted": true
+    },
+    {
+      "id": "14",
+      "title": "qweq",
+      "views": "ưeqwewq",
+      "isDeleted": true
+    },
+    {
+      "id": 15,
+      "title": "132",
+      "views": "123",
+      "isDeleted": false
+    },
+    {
+      "id": 16,
+      "title": "2311",
+      "views": "32213",
+      "isDeleted": false
     }
   ],
   "comments": [
     {
       "id": "1",
       "text": "a comment about post 1",
-      "postId": null
+      "postId": "1"
     },
     {
       "id": "2",
       "text": "another comment about post 1",
-      "postId": null
+      "postId": "1"
     }
   ],
   "profile": {
