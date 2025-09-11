@@ -1,19 +1,23 @@
 LoadData();
-
 //GET: domain:port//posts
 //GET: domain:port/posts/id
 async function LoadData() {
   let data = await fetch("http://localhost:3000/posts");
   let posts = await data.json();
-
-  // Lọc các bài chưa xóa
-  let filteredPosts = posts.filter((post) => post.isDeleted !== true);
-
-  // Xóa nội dung cũ trước khi render mới
   let body = document.getElementById("body");
   body.innerHTML = "";
+  for (const post of posts) {
+    if (!post.isDelete) {
+      body.innerHTML += convertDataToHTML(post);
+    }
+  }
+}
 
-  for (const post of filteredPosts) {
+async function LoadDataA() {
+  let data = await fetch("http://localhost:3000/posts");
+  let posts = await data.json();
+  for (const post of posts) {
+    let body = document.getElementById("body");
     body.innerHTML += convertDataToHTML(post);
   }
 }
@@ -36,61 +40,66 @@ async function SaveData() {
   let title = document.getElementById("title").value;
   let view = document.getElementById("view").value;
 
-  // Lấy danh sách posts hiện tại
-  let response = await fetch("http://localhost:3000/posts");
-  let posts = await response.json();
+  // Lấy tất cả posts để tìm id lớn nhất
+  let data = await fetch("http://localhost:3000/posts");
+  let posts = await data.json();
+  let id = null;
+  let isUpdate = false;
 
-  // Tìm ID lớn nhất trong danh sách posts
-  let maxId = posts.reduce((max, post) => Math.max(max, post.id), 0);
-
-  // Tạo ID mới
-  let newId = maxId + 1;
-
-  let dataObj = {
-    id: newId,
-    title: title,
-    views: view,
-    isDeleted: false, // thêm dòng này
-  };
-
-  // Gửi yêu cầu POST để thêm bài viết mới
-  let createResponse = await fetch("http://localhost:3000/posts", {
-    method: "POST",
-    body: JSON.stringify(dataObj),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  console.log(createResponse);
-}
-
-//PUT: domain:port//posts/id + body
-
-//DELETE: domain:port//posts/id
-async function Delete(id) {
-  let response = await fetch("http://localhost:3000/posts/" + id);
-
-  if (!response.ok) {
-    console.error(`Không tìm thấy bài viết với id = ${id}`);
-    return; // không tiếp tục nếu không tìm thấy
+  if (id) {
+    // Nếu có id, kiểm tra có tồn tại không
+    let found = posts.find((p) => p.id == id);
+    if (found) isUpdate = true;
   }
 
-  let post = await response.json();
+  if (isUpdate) {
+    let dataObj = {
+      title: title,
+      views: view,
+    };
+    await fetch("http://localhost:3000/posts/" + id, {
+      method: "PUT",
+      body: JSON.stringify(dataObj),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } else {
+    // Tự tăng id
+    let maxId = posts.reduce((max, p) => Math.max(max, Number(p.id)), 0);
+    let newId = (maxId + 1).toString();
+    let dataObj = {
+      id: newId,
+      title: title,
+      views: view,
+    };
+    await fetch("http://localhost:3000/posts", {
+      method: "POST",
+      body: JSON.stringify(dataObj),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+  LoadData();
+}
 
-  post.isDeleted = true;
-
-  let updateResponse = await fetch("http://localhost:3000/posts/" + id, {
-    method: "PUT",
-    body: JSON.stringify(post),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (updateResponse.ok) {
-    console.log("Xóa mềm thành công");
-    document.getElementById("body").innerHTML = "";
+//DELETE: domain:port//posts/id
+// Xoá mềm
+async function Delete(id) {
+  let response = await fetch("http://localhost:3000/posts/" + id);
+  if (response.ok) {
+    let post = await response.json();
+    post.isDelete = true;
+    await fetch("http://localhost:3000/posts/" + id, {
+      method: "PUT",
+      body: JSON.stringify(post),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     LoadData();
+  } else {
+    console.log("Delete failed");
   }
 }
